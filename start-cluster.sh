@@ -11,12 +11,12 @@ function cleanup(){
 
 trap cleanup ERR SIGINT SIGTERM
 
-$SPARK_HOME/sbin/start-master.sh
-sleep 5
+$SPARK_HOME/sbin/start-master.sh -h 127.0.0.1
+sleep 10
 
 echo "Starting workers"
-export SPARK_WORKER_INSTANCES=$NUM_WORKERS
-$SPARK_HOME/sbin/start-worker.sh spark://$(hostname):7077 --cores 2 --memory 2g 
+
+SPARK_WORKER_INSTANCES=$NUM_WORKERS SPARK_LOCAL_IP="127.0.0.1" $SPARK_HOME/sbin/start-worker.sh spark://localhost:7077 --cores 2 --memory 2g 
 
 echo "Starting history server"
 $SPARK_HOME/sbin/start-history-server.sh
